@@ -1,0 +1,15 @@
+<%= form_with(url: import_data_path, method: :post, local: true) do |form| %>
+
+<% if flash[:success] %>
+    <div class="alert alert-success" role="alert">
+      <%= flash[:success] %>
+    </div>
+<% end %>
+
+  <% if flash[:error] %>
+    <div class="alert alert-danger" role="alert">
+      <%= flash[:error] %>
+    </div>
+  <% end %>
+
+<%= form.file_field :file %> <%= form.submit "Enviar arquivo"%> <% end %>
