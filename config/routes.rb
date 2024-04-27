@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
 
   namespace :api do
-    post 'palestras/organize_conference', to: 'palestras#organize_conference'
+    post 'palestras/organizar_palestras', to: 'palestras#organize_conference'
   end
    root "palestras#index"
 
