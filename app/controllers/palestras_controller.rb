@@ -10,18 +10,14 @@ class PalestrasController < ApplicationController
       data = file.read.force_encoding('UTF-8')
       
       # Transforma os dados recebidos em um array.
-      lista = data.split("\n").map(&:chomp) 
+      lista = data.split("\n").map(&:chomp)       
       
-      @palestras = transform(lista)
-      
-      p "*"*80
-      print @palestras.to_json
-      p "*"*80
+      @palestras = transform(lista)       
 
       puts @palestras 
 
       
-      flash[:success] = "Dados importados com sucesso.#{@palestras}"
+      flash[:success] = "Dados importados com sucesso"
     else
       flash[:error] = "Por favor, selecione um arquivo para importar."
     end

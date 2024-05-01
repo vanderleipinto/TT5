@@ -12,18 +12,16 @@ module PalestrasHelper
     puts shifts
     p "--"*80
     
-    organizadas = organiza_tracks(shifts)
-    p "*"*80
-    puts organizadas
-    p "*"*80
-    organizadas
+    tracks_time(shifts)
+    
+    shifts
   end
   
   def criar_lista_palestras(list)
     list.map do |row|
       time = row.slice!(/\d+/).to_i
       name = (time == 0) ? row : row[0..-5]
-      {name: name, duration: ((time == 0) ? 5 : time)}
+      {start: 0, name: name, duration: ((time == 0) ? 5 : time)}
     end
   end
 
@@ -81,24 +79,37 @@ module PalestrasHelper
     end
   end
 
-  def organiza_tracks(tracks)
-    tracks_organizadas = {}
-    turno = "Track A"
-    tracks.each_with_index do |row, index|
-      if index.even?
-        tracks[index] << {name: "almoco", duration: 60}
-        tracks_organizadas[turno.to_sym] = tracks[index] + tracks[index + 1] << {name: "NetWorking Event", duration: 1}
-        turno.succ!
-      end
-    end
-    tracks_organizadas
-  end
-
   def format_time(minutes)
     hours = minutes.to_f / 60
     minutes = minutes.to_i % 60
     format("%02d:%02d", hours.to_i, minutes.to_i)
   end
+
+  def tracks_time(tracks) # adiciona almoço e evento e início de cada evento
+    index = 0
+    tempo_total_track = 0
+    time = 9 * 60 # horário do start da track
+    tracks.each_cons(2) do |track|  # percorre tracks (DIA)
+      if index.even? # insere os eventos almoço ou evento no final de cada turno
+        track.each_with_index do |turno, index_2|  # PERCORRE CADA TURNO (MANHÃ E TARDE)
+          turno << {start: "12:00", name: "almoço", duration: 60} if index_2.even?
+          turno << {start: "??", name: "networking", duration: 0} if index_2.odd?
+        end
+  
+        track.flatten.each do |palestra|
+          palestra[:start] = format_time(time) # insere o campo start com o horário que começa
+          time += palestra[:duration] # adiciona tempo ao time para a próxima palestra
+          tempo_total_track += palestra[:duration] # soma todo o tempo das palestras do dia para calcular o tempo do ultimo evento networking
+          palestra[:duration] = 480 - tempo_total_track if palestra[:name] == "networking"
+        end
+        time = 9 * 60
+        tempo_total_track = 0
+      end
+      index += 1
+    end
+  end
+
+
 
 
 

@@ -78,19 +78,6 @@ module Api::PalestrasHelper
     end
   end
 
-  # def organiza_tracks(tracks)
-  #   tracks_organizadas = {}
-  #   turno = "Track A"
-  #   tracks.each_with_index do |row, index|
-  #     if index.even?
-  #       tracks[index] << {name: "almoco", duration: 60}
-  #       tracks_organizadas[turno.to_sym] = tracks[index] + tracks[index + 1] << {name: "NetWorking Event", duration: 1}
-  #       turno.succ!
-  #     end
-  #   end
-  #   tracks_organizadas
-  # end
-
   def format_time(minutes)
     hours = minutes.to_f / 60
     minutes = minutes.to_i % 60
